@@ -1,0 +1,64 @@
+////////////////////////////
+// Julia Shader
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+
+uniform vec2 uResolution;
+//uniform float uTime;
+varying lowp vec4 vColor;
+
+// Specific parameters
+uniform vec2 uConst;
+uniform int uMaxIter;
+uniform sampler2D uPaletteSampler;
+
+void main(void)
+{
+    float   colorIndex,
+            a, 
+            b, 
+            r           = 0.0;
+    int     iter        = 0;
+    vec2    u;
+    vec4    color;
+
+    // Adapt point coordinate into complex number   
+    u = gl_FragCoord.xy / uResolution.xy * 3.6 - 1.8;
+    a = u.x;
+    b = u.y;
+
+    // --------------------------------------------
+    // iterate 
+    for(int i = 0; i > -1; i++)
+    {
+        iter++;
+        if((r >= 4.0) || iter >= uMaxIter)
+        {
+            break;
+        }
+        u.x = a;
+        u.y = b;
+        // u^2
+        a = (u.x * u.x - u.y * u.y) + uConst.x;
+        b = (u.x * u.y + u.x * u.y) - uConst.y;
+        r =  a * a + b * b;
+    }
+    
+    r = (r > 4.0) ? float(iter) * 4.0 + r : 0.0; // add r to keep a little nicely gradient
+    // clamp
+    r = (r < 255.0) ? ((r > 128.0) ? r : 0.0) : 255.0; 
+    // Level of current point;
+    colorIndex = (0.5 + r) / 256.0;
+    color = texture2D(uPaletteSampler, vec2(colorIndex, 0.0));
+    //color = texture2D(uPaletteSampler, vec2(r/uResolution.x, 0.0));
+    // --------------------------------------------
+    //gl_FragColor = vec4(color);
+    /*gl_FragColor = vec4(1.0 - (0.5+0.5*cos(colorIndex*2.0)),
+                        1.0 - (0.5+0.5*cos(colorIndex*3.0)),
+                        1.0 - (0.5+0.5*cos(colorIndex*5.0)),
+                        1.0);*/
+    gl_FragColor = vec4(colorIndex);
+}

@@ -1,0 +1,14 @@
+////////////////////////////////////
+// minimum basic Vertex Shader
+attribute vec3 aVertexPosition;
+attribute vec4 aVertexColor;
+uniform mat4 uMatrixProjection;
+uniform mat4 uMatrixView;
+uniform mat4 uMatrixNormal;
+varying lowp vec4 vColor;
+
+void main(void) {
+
+  gl_Position = uMatrixProjection * uMatrixView * vec4(aVertexPosition, 1.0);
+  vColor = aVertexColor;
+}
