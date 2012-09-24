@@ -1,4 +1,4 @@
 Julia-set-experiment
 ====================
 
-Three different HTML5 way to compute Julia fractal set in "realtime". Single javascript process, 4 webworkers process, and the powerfull WebGL-GLSL Shader
+Three differents ways to compute Julia fractal set in "realtime" with HTML5. Single javascript process, 4 webworkers process, and the powerfull WebGL-GLSL Shader
