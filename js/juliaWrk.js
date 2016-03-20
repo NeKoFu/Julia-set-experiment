@@ -46,17 +46,17 @@ var convertCoordinateToComplex = function (c, i, j, width, height){
 // Processing on message event
 self.addEventListener('message', function(e) {
 
-    //self.postMessage = self.webkitPostMessage || self.postMessage;
-      var data = e.data,
-          x, y, u, v, level,
-          w        = data.x2 - data.x1,
-          h        = data.y2 - data.y1,
-          pc       = new Complex(),
-          cc       = new Complex(data.c.a, data.c.b);
+    self.postMessage = self.webkitPostMessage || self.postMessage;
+    var data = e.data,
+        x, y, u, v, level,
+        w        = data.x2 - data.x1,
+        h        = data.y2 - data.y1,
+        pc       = new Complex(),
+        cc       = new Complex(data.c.a, data.c.b);
 
-      _buffer  = new ArrayBuffer(w * h + 1);
-      _buf8    = new Uint8Array(_buffer);
-      _buf8[0] = data.wid; // First word, worker id
+    _buffer  = new ArrayBuffer(w * h + 1);
+    _buf8    = new Uint8Array(_buffer);
+    _buf8[0] = data.wid; // First word, worker id
 
     // Loop for each pixel
     for(v = 0, y = data.y1; y < data.y2; v++, y++){
@@ -70,6 +70,6 @@ self.addEventListener('message', function(e) {
         }
     }
 
-      self.webkitPostMessage(_buffer, [_buffer]);
+    self.postMessage(_buffer, [_buffer]);
 
 }, false);
